@@ -49,12 +49,23 @@ public class UserController {
     @GetMapping
     public ResponseEntity<?> getUsers() throws Exception {
         try {
-            List<UserResponseDTO> userResponseDTOList = userService.getUsers();
+            List<UserResponseDTO> userResponseDTOList = userService.listUsers();
 
             return ResponseEntity.ok(userResponseDTOList);
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("We didnt found any user");
         }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getUser(@PathVariable Long id) throws Exception {
+
+            UserResponseDTO user = userService.getUser(id);
+
+
+
+            return ResponseEntity.ok(user);
+
     }
 }

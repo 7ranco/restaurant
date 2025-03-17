@@ -5,7 +5,9 @@ import aesir.api.restaurant.domain.models.Restaurant;
 import aesir.api.restaurant.domain.models.RestaurantUser;
 import aesir.api.restaurant.domain.models.Rol;
 import aesir.api.restaurant.domain.models.User;
+import aesir.api.restaurant.domain.repository.RestaurantRepository;
 import aesir.api.restaurant.domain.repository.RestaurantUserRepository;
+import aesir.api.restaurant.domain.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,23 +23,23 @@ public class RestaurantUserServiceImpl implements RestaurantUserService{
     private RestaurantUserRepository restaurantUserRepository;
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
-    private RestaurantService restaurantService;
-
-    @Autowired
     private RolService rolService;
+
+    @Autowired
+    private RestaurantRepository restaurantRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     @Transactional
     public RestaurantUserResponseDTO createRestaurantUser(RestaurantUserDTO restaurantUserDTO) throws Exception {
 
-        UserResponseDTO userResponseDTO = userService.createUser(restaurantUserDTO.userDTO());
-        RestaurantResponseDTO restaurantResponseDTO = restaurantService.createRestaurant(restaurantUserDTO.restaurantDTO());
+        Rol rol = rolService.getRol(restaurantUserDTO.userDTO().rol());
 
-        User user = userService.getUser(userResponseDTO.id());
-        Restaurant restaurant = restaurantService.getRestaurant(restaurantResponseDTO.id());
+        User user = userRepository.save(new User(restaurantUserDTO.userDTO(), rol));
+
+        Restaurant restaurant = restaurantRepository.save(new Restaurant(restaurantUserDTO.restaurantDTO()));
 
         RestaurantUser restaurantUser = restaurantUserRepository.save(new RestaurantUser(restaurant,user));
 

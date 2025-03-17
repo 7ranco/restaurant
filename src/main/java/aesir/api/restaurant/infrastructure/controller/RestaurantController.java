@@ -55,4 +55,17 @@ public class RestaurantController {
         }
 
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getRestaurantId(@PathVariable Long id){
+        try {
+            RestaurantResponseDTO RestaurantResponseDTO = restaurantService.getRestaurant(id);
+
+            return ResponseEntity.ok(RestaurantResponseDTO);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("We didnt found any Restaurant");
+        }
+
+    }
 }

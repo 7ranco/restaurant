@@ -7,12 +7,10 @@ import aesir.api.restaurant.domain.dto.UserResponseDTO;
 import aesir.api.restaurant.domain.models.Rol;
 import aesir.api.restaurant.domain.models.User;
 import aesir.api.restaurant.domain.repository.UserRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -24,20 +22,21 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     @Override
     public UserResponseDTO createUser(UserDTO userDTO) throws Exception {
-            Rol rol = rolService.getRol(userDTO.rol());
+        Rol rol = rolService.getRol(userDTO.rol());
 
-            User user = userRepository.save(new User(userDTO, rol));
+        User user = userRepository.save(new User(userDTO, rol));
 
-            UserResponseDTO userResponseDTO = new UserResponseDTO(user.getId(), user.getCc(),
-                    user.getName(), userDTO.lastName(), userDTO.email(), user.getPhoneNumber(),
-                    user.getUserName(), user.getPassword(), new RolResponseDTO(user.getRol().getId(),
-                    user.getRol().getRolName()));
+        UserResponseDTO userResponseDTO = new UserResponseDTO(user.getId(), user.getCc(),
+                user.getName(), userDTO.lastName(), userDTO.email(), user.getPhoneNumber(),
+                user.getUserName(), user.getPassword(), new RolResponseDTO(user.getRol().getId(),
+                user.getRol().getRolName()));
 
-            return userResponseDTO;
+        userRepository.findByRol();
+        return userResponseDTO;
     }
 
     @Override
-    public List<UserResponseDTO> getUsers() throws Exception {
+    public List<UserResponseDTO> listUsers() throws Exception {
         List<User> userList = userRepository.findAll();
 
         List<UserResponseDTO> userResponseDTOS = userList.stream().map(u ->{
@@ -45,14 +44,20 @@ public class UserServiceImpl implements UserService {
                     u.getEmail(), u.getPhoneNumber(),u.getUserName(),u.getPassword(),
                     new RolResponseDTO(u.getRol().getId(), u.getRol().getRolName()));
         }).toList();
+
         return userResponseDTOS;
     }
 
     @Override
-    public User getUser(Long id) throws Exception {
-        return userRepository.findById(id).map(User::new)
+    public UserResponseDTO getUser(Long id) throws Exception {
+        User user = userRepository.findById(id).map(User::new)
                 .stream().findFirst()
                 .orElseThrow(() -> new Exception("User not found"));
 
+        UserResponseDTO userResponseDTO = new UserResponseDTO(user.getId(), user.getCc(), user.getName(),
+                user.getLastName(),user.getEmail(),user.getPhoneNumber(), user.getUserName(),user.getPassword(), new RolResponseDTO(user.getRol().getId(), user.getRol().getRolName()));
+        return userResponseDTO;
+
     }
+
 }

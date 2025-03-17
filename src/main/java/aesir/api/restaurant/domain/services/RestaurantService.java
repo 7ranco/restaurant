@@ -13,5 +13,5 @@ import java.util.Optional;
 public interface RestaurantService {
     RestaurantResponseDTO createRestaurant(RestaurantDTO restaurantDTO) throws Exception;
     List<RestaurantResponseDTO> listRestaurant()throws Exception;
-    Restaurant getRestaurant(Long id) throws Exception;
+    RestaurantResponseDTO getRestaurant(Long id) throws Exception;
 }

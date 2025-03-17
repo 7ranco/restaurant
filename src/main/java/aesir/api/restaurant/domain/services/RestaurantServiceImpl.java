@@ -42,9 +42,16 @@ public class RestaurantServiceImpl implements RestaurantService{
     }
 
     @Override
-    public Restaurant getRestaurant(Long id) throws Exception {
-        return restaurantRepository.findById(id).map(Restaurant::new)
+    public RestaurantResponseDTO getRestaurant(Long id) throws Exception {
+        Restaurant res = restaurantRepository.findById(id).map(Restaurant::new)
                 .stream().findFirst()
                 .orElseThrow(() -> new Exception("Restaurant not found"));
+
+        RestaurantResponseDTO restaurantResponseDTO = new RestaurantResponseDTO(res.getId(),
+                res.getNit(), res.getRestaurantName(),
+                new AddressDTO(res.getAddress().getIndicacion(),res.getAddress().getNumero(),
+                        res.getAddress().getComplemento(),res.getAddress().getBarrio(),
+                        res.getAddress().getCiudad()), res.getEmail(), res.getPhone());
+        return restaurantResponseDTO;
     }
 }

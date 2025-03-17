@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface UserService{
     UserResponseDTO createUser(UserDTO userDTO) throws Exception;
 
-    List<UserResponseDTO> getUsers() throws Exception;
+    List<UserResponseDTO> listUsers() throws Exception;
 
-    User getUser(Long id) throws Exception;
+    UserResponseDTO getUser(Long id) throws Exception;
 }
