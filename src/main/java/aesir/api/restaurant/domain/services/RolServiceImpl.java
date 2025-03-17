@@ -18,26 +18,20 @@ public class RolServiceImpl implements RolService{
     @Override
     public RolResponseDTO createRol(RolDTO rolDTO) throws Exception {
         Rol rol = rolRepository.save(new Rol(rolDTO));
-
-        RolResponseDTO rolResponseDTO = new RolResponseDTO(rol.getId(), rol.getRolName());
-        return rolResponseDTO;
+        return new RolResponseDTO(rol.getId(), rol.getRolName());
     }
 
     @Override
     public List<RolResponseDTO> listRols() throws Exception {
         List<Rol> rol = rolRepository.findAll();
-
-            List<RolResponseDTO> rolResponseDTO = rol.stream().map(res -> {
+            return rol.stream().map(res -> {
                 return new RolResponseDTO(res.getId(), res.getRolName());
             }).toList();
-            return rolResponseDTO;
     }
 
     @Override
     public Rol getRol(Long rolId) throws Exception {
-        Optional<Rol> rol = rolRepository.findById(rolId);
-
-        return rol.get();
+        return rolRepository.findById(rolId).get();
     }
 
 
