@@ -30,9 +30,15 @@ public class RolServiceImpl implements RolService{
     }
 
     @Override
-    public Rol getRol(Long rolId) throws Exception {
+    public RolResponseDTO getRol(Long id) throws Exception {
+        Rol rol = rolRepository.findById(id).get();
+        return new RolResponseDTO(rol.getId(), rol.getRolName());
+    }
+    @Override
+    public Rol getRolId(Long rolId) throws Exception {
         return rolRepository.findById(rolId).get();
     }
+
 
 
 }

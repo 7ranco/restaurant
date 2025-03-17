@@ -14,6 +14,8 @@ public interface RolService {
 
     RolResponseDTO createRol(RolDTO rolDTO) throws Exception;
     List<RolResponseDTO> listRols()throws Exception;
-    Rol getRol(Long rolName) throws Exception;
+    Rol getRolId(Long id) throws Exception;
+
+    RolResponseDTO getRol(Long id) throws Exception;
 
 }

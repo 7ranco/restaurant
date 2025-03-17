@@ -44,7 +44,7 @@ public class RestaurantController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getRestaurant(){
+    public ResponseEntity<?> listUsers(){
         try {
             List<RestaurantResponseDTO> RestaurantResponseDTO = restaurantService.listRestaurants();
 
@@ -64,7 +64,7 @@ public class RestaurantController {
             return ResponseEntity.ok(RestaurantResponseDTO);
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("We didnt found any Restaurant");
+                    .body("We didnt found any Restaurant with id:"+ id);
         }
 
     }

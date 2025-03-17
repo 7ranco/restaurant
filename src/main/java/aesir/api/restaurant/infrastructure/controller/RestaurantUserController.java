@@ -9,13 +9,11 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/restaurantUser")
@@ -27,7 +25,7 @@ public class RestaurantUserController {
     @PostMapping
     public ResponseEntity<?> createRestaurantUser(@RequestBody @Valid RestaurantUserDTO restaurantUserDTO,
                                                                           UriComponentsBuilder uriComponentsBuilder) throws Exception {
-
+        try{
             RestaurantUserResponseDTO responseDTO = restaurantUserService.createRestaurantUser(restaurantUserDTO);
 
             URI uri = uriComponentsBuilder.path("/restaurantUser/{id}")
@@ -35,5 +33,33 @@ public class RestaurantUserController {
                     .toUri();
 
             return ResponseEntity.created(uri).body(responseDTO);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body("We didnt found any register");
+        }
+    }
+
+    @GetMapping
+    public ResponseEntity<?> listRestaurants(){
+        try{
+            List<RestaurantUserResponseDTO> responseDTO = restaurantUserService.listRestaurantUser();
+
+            return ResponseEntity.ok(responseDTO);
+        } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("We didnt found any Restaurant User");
+        }
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getRestaurant(@PathVariable Long id) throws Exception {
+        try {
+            RestaurantUserResponseDTO responseDTO = restaurantUserService.getRestaurantUser(id);
+
+            return ResponseEntity.ok(responseDTO);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("We didnt found any RestaurantUser with id: " + id);
+        }
+
     }
 }

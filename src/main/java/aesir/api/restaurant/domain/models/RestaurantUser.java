@@ -32,6 +32,9 @@ public class RestaurantUser
 
     }
 
+    public RestaurantUser(RestaurantUser restaurantUser) {
+    }
+
     public User getUser() {
         return user;
     }

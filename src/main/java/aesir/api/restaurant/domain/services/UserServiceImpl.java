@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserResponseDTO createUser(UserDTO userDTO) throws Exception {
-        Rol rol = rolService.getRol(userDTO.rol());
+        Rol rol = rolService.getRolId(userDTO.rol());
 
         User user = userRepository.save(new User(userDTO, rol));
 

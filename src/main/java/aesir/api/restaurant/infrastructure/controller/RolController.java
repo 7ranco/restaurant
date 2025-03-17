@@ -1,9 +1,6 @@
 package aesir.api.restaurant.infrastructure.controller;
 
-import aesir.api.restaurant.domain.dto.AddressDTO;
-import aesir.api.restaurant.domain.dto.RestaurantDTO;
-import aesir.api.restaurant.domain.dto.RolDTO;
-import aesir.api.restaurant.domain.dto.RolResponseDTO;
+import aesir.api.restaurant.domain.dto.*;
 import aesir.api.restaurant.domain.models.Restaurant;
 import aesir.api.restaurant.domain.models.Rol;
 import aesir.api.restaurant.domain.repository.RolRepository;
@@ -23,8 +20,6 @@ import java.util.List;
 @RequestMapping("/rol")
 public class RolController {
 
-    @Autowired
-    private RolRepository rolRepository;
     @Autowired
     private RolService rolService;
     @PostMapping
@@ -46,13 +41,25 @@ public class RolController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getRol(){
+    public ResponseEntity<?> listRol(){
        try{
            List<RolResponseDTO> rolResponseDTO = rolService.listRols();
             return ResponseEntity.ok(rolResponseDTO);
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("We didnt found any Rol");
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getRol(@PathVariable Long id) throws Exception {
+        try{
+
+            RolResponseDTO rol = rolService.getRol(id);
+            return ResponseEntity.ok(rol);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("We didnt found any User with id: "+ id);
         }
 
     }
