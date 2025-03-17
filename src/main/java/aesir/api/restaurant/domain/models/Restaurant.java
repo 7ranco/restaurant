@@ -24,6 +24,15 @@ public class Restaurant {
     private String email;
     private Long phone;
 
+    public Restaurant(Restaurant restaurant) {
+        this.id = restaurant.id;
+        this.nit = restaurant.getNit();
+        this.restaurantName = restaurant.getRestaurantName();
+        this.address = restaurant.getAddress();
+        this.email = restaurant.getEmail();
+        this.phone = restaurant.getPhone();
+    }
+
     public Restaurant(RestaurantDTO restaurantDTO) {
         this.nit = restaurantDTO.nit();
         this.restaurantName = restaurantDTO.restaurantName();

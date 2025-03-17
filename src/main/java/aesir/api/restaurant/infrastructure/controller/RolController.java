@@ -3,9 +3,12 @@ package aesir.api.restaurant.infrastructure.controller;
 import aesir.api.restaurant.domain.dto.AddressDTO;
 import aesir.api.restaurant.domain.dto.RestaurantDTO;
 import aesir.api.restaurant.domain.dto.RolDTO;
+import aesir.api.restaurant.domain.dto.RolResponseDTO;
 import aesir.api.restaurant.domain.models.Restaurant;
 import aesir.api.restaurant.domain.models.Rol;
 import aesir.api.restaurant.domain.repository.RolRepository;
+import aesir.api.restaurant.domain.services.RolService;
+import aesir.api.restaurant.domain.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,33 +25,34 @@ public class RolController {
 
     @Autowired
     private RolRepository rolRepository;
+    @Autowired
+    private RolService rolService;
     @PostMapping
     public ResponseEntity<?> createRol(@RequestBody @Valid RolDTO rolDTO, UriComponentsBuilder  uriComponentsBuilder){
-        Rol rol = new Rol(rolDTO);
-        rolRepository.save(rol);
-        URI uri = uriComponentsBuilder.path("/rol/{id}")
-                .buildAndExpand(rol.getId())
-                .toUri();
+       try{
 
-        RolDTO responseDTO = new RolDTO(rol.getRolName());
+           RolResponseDTO responseDTO = rolService.createRol(rolDTO);
 
-        return ResponseEntity.created(uri).body(responseDTO);
+           URI uri = uriComponentsBuilder.path("/rol/{id}")
+                   .buildAndExpand(responseDTO.id())
+                   .toUri();
+
+           return ResponseEntity.created(uri).body(responseDTO);
+
+       }catch (Exception e){
+           return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Rol dont created");
+       }
+
     }
 
     @GetMapping
     public ResponseEntity<?> getRol(){
-        List<Rol> rol = rolRepository.findAll();
-
-
-        try {
-            List<RolDTO> rolDTOS = rol.stream().map(res -> {
-                return new RolDTO(res.getRolName());
-            }).toList();
-
-            return ResponseEntity.ok(rolDTOS);
+       try{
+           List<RolResponseDTO> rolResponseDTO = rolService.listRols();
+            return ResponseEntity.ok(rolResponseDTO);
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("We dont found any Rol");
+                    .body("We didnt found any Rol");
         }
 
     }

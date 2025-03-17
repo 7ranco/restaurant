@@ -2,7 +2,9 @@ package aesir.api.restaurant.domain.dto;
 
 import jakarta.validation.constraints.NotNull;
 
-public record UserDTO(
+public record UserResponseDTO(
+        @NotNull
+        Long id,
         @NotNull
         String cc,
         @NotNull
@@ -18,6 +20,6 @@ public record UserDTO(
         @NotNull
         String password,
         @NotNull
-        Long rol
+        RolResponseDTO rolResponseDTO
 ) {
 }
