@@ -46,7 +46,7 @@ public class RestaurantController {
     @GetMapping
     public ResponseEntity<?> getRestaurant(){
         try {
-            List<RestaurantResponseDTO> RestaurantResponseDTO = restaurantService.listRestaurant();
+            List<RestaurantResponseDTO> RestaurantResponseDTO = restaurantService.listRestaurants();
 
             return ResponseEntity.ok(RestaurantResponseDTO);
         }catch (Exception e){

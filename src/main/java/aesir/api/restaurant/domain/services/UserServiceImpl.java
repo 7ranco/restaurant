@@ -9,8 +9,10 @@ import aesir.api.restaurant.domain.models.User;
 import aesir.api.restaurant.domain.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -21,6 +23,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
     @Override
+    @Transactional
     public UserResponseDTO createUser(UserDTO userDTO) throws Exception {
         Rol rol = rolService.getRol(userDTO.rol());
 
@@ -31,7 +34,6 @@ public class UserServiceImpl implements UserService {
                 user.getUserName(), user.getPassword(), new RolResponseDTO(user.getRol().getId(),
                 user.getRol().getRolName()));
 
-        userRepository.findByRol();
         return userResponseDTO;
     }
 
@@ -58,6 +60,11 @@ public class UserServiceImpl implements UserService {
                 user.getLastName(),user.getEmail(),user.getPhoneNumber(), user.getUserName(),user.getPassword(), new RolResponseDTO(user.getRol().getId(), user.getRol().getRolName()));
         return userResponseDTO;
 
+    }
+
+    @Override
+    public Optional<User> getUserById(Long id) throws Exception {
+        return userRepository.findById(id);
     }
 
 }

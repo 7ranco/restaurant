@@ -26,10 +26,10 @@ public class RestaurantUserServiceImpl implements RestaurantUserService{
     private RolService rolService;
 
     @Autowired
-    private RestaurantRepository restaurantRepository;
+    private RestaurantService restaurantService;
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Override
     @Transactional
@@ -37,9 +37,13 @@ public class RestaurantUserServiceImpl implements RestaurantUserService{
 
         Rol rol = rolService.getRol(restaurantUserDTO.userDTO().rol());
 
-        User user = userRepository.save(new User(restaurantUserDTO.userDTO(), rol));
+        UserResponseDTO userResponseDTO = userService.createUser(restaurantUserDTO.userDTO());
 
-        Restaurant restaurant = restaurantRepository.save(new Restaurant(restaurantUserDTO.restaurantDTO()));
+        RestaurantResponseDTO restaurantResponseDTO = restaurantService.createRestaurant(restaurantUserDTO.restaurantDTO());
+
+        User user = userService.getUserById(userResponseDTO.id()).get();
+
+        Restaurant restaurant = restaurantService.getRestaurantById(restaurantResponseDTO.id()).get();
 
         RestaurantUser restaurantUser = restaurantUserRepository.save(new RestaurantUser(restaurant,user));
 

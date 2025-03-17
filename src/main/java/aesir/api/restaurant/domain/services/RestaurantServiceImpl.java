@@ -9,6 +9,7 @@ import aesir.api.restaurant.domain.repository.RestaurantRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +20,7 @@ public class RestaurantServiceImpl implements RestaurantService{
     @Autowired
     private RestaurantRepository restaurantRepository;
     @Override
+    @Transactional
     public RestaurantResponseDTO createRestaurant(RestaurantDTO restaurantDTO) throws Exception {
         Restaurant restaurant = restaurantRepository.save(new Restaurant(restaurantDTO));
         RestaurantResponseDTO responseDTO =new RestaurantResponseDTO(restaurant.getId(),restaurant.getNit(), restaurant.getRestaurantName(),
@@ -29,7 +31,8 @@ public class RestaurantServiceImpl implements RestaurantService{
     }
 
     @Override
-    public List<RestaurantResponseDTO> listRestaurant() throws Exception {
+
+    public List<RestaurantResponseDTO> listRestaurants() throws Exception {
         List<Restaurant> restaurants = restaurantRepository.findAll();
         List<RestaurantResponseDTO> restaurantResponseDTOS = restaurants.stream().map(res -> {
             return new RestaurantResponseDTO(res.getId(), res.getNit(),
@@ -53,5 +56,10 @@ public class RestaurantServiceImpl implements RestaurantService{
                         res.getAddress().getComplemento(),res.getAddress().getBarrio(),
                         res.getAddress().getCiudad()), res.getEmail(), res.getPhone());
         return restaurantResponseDTO;
+    }
+
+    @Override
+    public Optional<Restaurant> getRestaurantById(Long id) throws Exception {
+        return restaurantRepository.findById(id);
     }
 }

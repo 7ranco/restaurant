@@ -15,4 +15,5 @@ public interface UserService{
     List<UserResponseDTO> listUsers() throws Exception;
 
     UserResponseDTO getUser(Long id) throws Exception;
+    Optional<User> getUserById(Long id) throws Exception;
 }
