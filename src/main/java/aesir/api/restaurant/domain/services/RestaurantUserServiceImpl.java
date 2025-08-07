@@ -1,12 +1,17 @@
 package aesir.api.restaurant.domain.services;
 
 import aesir.api.restaurant.domain.dto.*;
+import aesir.api.restaurant.domain.exceptions.RestaurantExistsException;
+import aesir.api.restaurant.domain.exceptions.UserExistsException;
 import aesir.api.restaurant.domain.models.Restaurant;
 import aesir.api.restaurant.domain.models.RestaurantUser;
 import aesir.api.restaurant.domain.models.Rol;
 import aesir.api.restaurant.domain.models.User;
+import aesir.api.restaurant.domain.repository.RestaurantRepository;
 import aesir.api.restaurant.domain.repository.RestaurantUserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +32,7 @@ public class RestaurantUserServiceImpl implements RestaurantUserService{
     private RestaurantService restaurantService;
 
     @Autowired
+    @Lazy
     private UserService userService;
 
     @Override
@@ -34,6 +40,18 @@ public class RestaurantUserServiceImpl implements RestaurantUserService{
     public RestaurantUserResponseDTO createRestaurantUser(RestaurantUserDTO restaurantUserDTO) throws Exception {
 
         Rol rol = rolService.getRolId(restaurantUserDTO.userDTO().rol());
+
+        Restaurant rest = restaurantService.getRestaurantByNit(restaurantUserDTO.restaurantDTO().nit());
+
+        User use = userService.getUserByCc(restaurantUserDTO.userDTO().cc());
+
+        if (rest != null){
+            throw new RestaurantExistsException(restaurantUserDTO.restaurantDTO().nit());
+        }
+
+        if( use != null){
+            throw new UserExistsException(restaurantUserDTO.userDTO().cc());
+        }
 
         UserResponseDTO userResponseDTO = userService.createUser(restaurantUserDTO.userDTO());
 

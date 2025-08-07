@@ -62,4 +62,9 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(id);
     }
 
+    @Override
+    public User getUserByCc(String cc) {
+        return userRepository.getUserByCc(cc);
+    }
+
 }

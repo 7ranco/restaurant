@@ -19,5 +19,6 @@ public record UserDTO(
         String password,
         @NotNull
         Long rol
+
 ) {
 }

@@ -15,4 +15,6 @@ public interface RestaurantService {
     List<RestaurantResponseDTO> listRestaurants()throws Exception;
     RestaurantResponseDTO getRestaurant(Long id) throws Exception;
     Optional<Restaurant> getRestaurantById(Long id) throws Exception;
+
+    Restaurant getRestaurantByNit(String nit) throws Exception;
 }

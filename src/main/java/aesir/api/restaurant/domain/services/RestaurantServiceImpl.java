@@ -58,4 +58,10 @@ public class RestaurantServiceImpl implements RestaurantService{
     public Optional<Restaurant> getRestaurantById(Long id) throws Exception {
         return restaurantRepository.findById(id);
     }
+
+    @Override
+    public Restaurant getRestaurantByNit(String nit) throws Exception {
+        return  restaurantRepository.getRestaurantByNit(nit);
+    }
+
 }

@@ -16,4 +16,6 @@ public interface UserService{
 
     UserResponseDTO getUser(Long id) throws Exception;
     Optional<User> getUserById(Long id) throws Exception;
+
+    User getUserByCc(String cc);
 }

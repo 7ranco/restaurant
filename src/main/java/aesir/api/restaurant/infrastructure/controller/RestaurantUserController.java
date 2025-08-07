@@ -3,6 +3,8 @@ package aesir.api.restaurant.infrastructure.controller;
 import aesir.api.restaurant.domain.dto.RestaurantResponseDTO;
 import aesir.api.restaurant.domain.dto.RestaurantUserDTO;
 import aesir.api.restaurant.domain.dto.RestaurantUserResponseDTO;
+import aesir.api.restaurant.domain.exceptions.RestaurantExistsException;
+import aesir.api.restaurant.domain.exceptions.UserExistsException;
 import aesir.api.restaurant.domain.repository.RestaurantUserRepository;
 import aesir.api.restaurant.domain.services.RestaurantUserService;
 import jakarta.validation.Valid;
@@ -25,7 +27,7 @@ public class RestaurantUserController {
     @PostMapping
     public ResponseEntity<?> createRestaurantUser(@RequestBody @Valid RestaurantUserDTO restaurantUserDTO,
                                                                           UriComponentsBuilder uriComponentsBuilder) throws Exception {
-        try{
+        try {
             RestaurantUserResponseDTO responseDTO = restaurantUserService.createRestaurantUser(restaurantUserDTO);
 
             URI uri = uriComponentsBuilder.path("/restaurantUser/{id}")
@@ -33,9 +35,9 @@ public class RestaurantUserController {
                     .toUri();
 
             return ResponseEntity.created(uri).body(responseDTO);
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body("We didnt found any register");
+        } catch (RestaurantExistsException | UserExistsException ex) {
+            // Manejo específico si ocurre alguna de las excepciones
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
         }
     }
 
